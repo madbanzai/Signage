@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fullscreen Image Rotator</title>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+        background: black;
+    }
+
+    #slideshow {
+        width: 100vw;
+        height: 100vh;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+</style>
+</head>
+<body>
+
+<div id="slideshow"></div>
+
+<script>
+async function loadImages() {
+    const response = await fetch("images/images.json");
+    const files = await response.json();
+
+    // Prepend folder path
+    return files.map(f => `images/${f}`);
+}
+
+(async () => {
+    const images = await loadImages();
+    let index = 0;
+    const interval = 30000;
+
+    function showImage() {
+        document.getElementById("slideshow").style.backgroundImage =
+            `url('${images[index]}')`;
+        index = (index + 1) % images.length;
+    }
+
+    showImage();
+    setInterval(showImage, interval);
+})();
+</script>
+
+</body>
+</html>
